@@ -4,14 +4,14 @@
 winexe
 C#
 .cs
-C:\Users\matth\Downloads\git\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\
 monitor_splitter
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\Users\matth\Downloads\git\monitor-splitter\monitor-splitter\App.xaml
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\App.xaml
 11407045341
-
+1-984944500
 4-595458478
 199-1380958474
 MainWindow.xaml;

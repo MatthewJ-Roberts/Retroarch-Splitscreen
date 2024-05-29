@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace monitor_splitter
 {
@@ -28,13 +29,32 @@ namespace monitor_splitter
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
         }
 
+        private (int widthInPixels, int heightInPixels) GetPhysicalDimensions(UIElement element, double actualWidth, double actualHeight)
+        {
+            var dpiScale = VisualTreeHelper.GetDpi(element);
+            double dpiX = dpiScale.DpiScaleX;
+            double dpiY = dpiScale.DpiScaleY;
+
+            int widthInPixels = (int)(actualWidth * dpiX);
+            int heightInPixels = (int)(actualHeight * dpiY);
+
+            return (widthInPixels, heightInPixels);
+        }
+
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             try
             {
-                // Get the dimensions of the left and right panels
-                panelWidth = LeftPanel.ActualWidth;
-                panelHeight = LeftPanel.ActualHeight;
+                // Force layout update
+                LeftPanel.UpdateLayout();
+                RightPanel.UpdateLayout();
+
+                var leftPanelDimensions = GetPhysicalDimensions(LeftPanel, LeftPanel.ActualWidth, LeftPanel.ActualHeight);
+                var rightPanelDimensions = GetPhysicalDimensions(RightPanel, RightPanel.ActualWidth, RightPanel.ActualHeight);
+
+                Debug.WriteLine($"Left Panel - Width: {leftPanelDimensions.widthInPixels}, Height: {leftPanelDimensions.heightInPixels}");
+                Debug.WriteLine($"Right Panel - Width: {rightPanelDimensions.widthInPixels}, Height: {rightPanelDimensions.heightInPixels}");
+
                 retroarchProcessLeft = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
                 retroarchProcessRight = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
 
@@ -61,9 +81,9 @@ namespace monitor_splitter
                         if (!windows.Any())
                         {
                             closedWindows++;
-                            if (closedWindows == 2)
+                            if (closedWindows == 3)
                             {
-                                Dispatcher.Invoke(() => Environment.Exit(0));  // Exit with code 0
+                                Dispatcher.Invoke(() => Environment.Exit(0));
                             }
                         }
                         else
@@ -76,20 +96,29 @@ namespace monitor_splitter
                             {
                                 Dispatcher.Invoke(() =>
                                 {
-                                    // Make the new game window a child of the main window
                                     SetParent(window, new WindowInteropHelper(this).Handle);
 
-                                    // Resize and position the window to fit its side
+                                    var screen = SystemParameters.WorkArea;
+                                    var dpiScale = VisualTreeHelper.GetDpi(this);
+
+                                    int leftPanelWidth = (int)(LeftPanel.ActualWidth * dpiScale.DpiScaleX);
+                                    int leftPanelHeight = (int)(LeftPanel.ActualHeight * dpiScale.DpiScaleY);
+                                    int rightPanelWidth = (int)(RightPanel.ActualWidth * dpiScale.DpiScaleX);
+                                    int rightPanelHeight = (int)(RightPanel.ActualHeight * dpiScale.DpiScaleY);
+
+                                    Debug.WriteLine($"Screen Width: {screen.Width}, Screen Height: {screen.Height}");
+                                    Debug.WriteLine($"Left Panel Width: {leftPanelWidth}, Left Panel Height: {leftPanelHeight}");
+                                    Debug.WriteLine($"Right Panel Width: {rightPanelWidth}, Right Panel Height: {rightPanelHeight}");
+
                                     if (process == retroarchProcessLeft)
                                     {
-                                        SetWindowPos(window, IntPtr.Zero, 0, 0, (int)panelWidth - 1, (int)panelHeight, SWP_NOZORDER);
+                                        SetWindowPos(window, IntPtr.Zero, 0, 0, leftPanelWidth - 1, leftPanelHeight, SWP_NOZORDER);
                                     }
                                     else if (process == retroarchProcessRight)
                                     {
-                                        SetWindowPos(window, IntPtr.Zero, (int)(SystemParameters.PrimaryScreenWidth - panelWidth + 1), 0, (int)panelWidth - 1, (int)panelHeight, SWP_NOZORDER);
+                                        SetWindowPos(window, IntPtr.Zero, leftPanelWidth + 1, 0, rightPanelWidth - 1, rightPanelHeight, SWP_NOZORDER);
                                     }
 
-                                    // Modify the window styles to remove borders
                                     long windowStyles = GetWindowLong(window, GWL_STYLE);
                                     SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
                                 });
@@ -100,10 +129,10 @@ namespace monitor_splitter
             }
             catch (Exception ex)
             {
-                // Log the error or handle it accordingly
                 Dispatcher.Invoke(() => MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
             }
         }
+
 
         private static List<IntPtr> GetProcessWindows(int processId)
         {
