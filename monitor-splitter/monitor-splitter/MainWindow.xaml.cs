@@ -16,8 +16,8 @@ namespace monitor_splitter
         private Process retroarchProcessLeft;
         private Process retroarchProcessRight;
 
-        private double panelWidth;
-        private double panelHeight;
+        private int panelWidth;
+        private int panelHeight;
 
         public MainWindow()
         {
@@ -29,32 +29,10 @@ namespace monitor_splitter
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
         }
 
-        private (int widthInPixels, int heightInPixels) GetPhysicalDimensions(UIElement element, double actualWidth, double actualHeight)
-        {
-            var dpiScale = VisualTreeHelper.GetDpi(element);
-            double dpiX = dpiScale.DpiScaleX;
-            double dpiY = dpiScale.DpiScaleY;
-
-            int widthInPixels = (int)(actualWidth * dpiX);
-            int heightInPixels = (int)(actualHeight * dpiY);
-
-            return (widthInPixels, heightInPixels);
-        }
-
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             try
             {
-                // Force layout update
-                LeftPanel.UpdateLayout();
-                RightPanel.UpdateLayout();
-
-                var leftPanelDimensions = GetPhysicalDimensions(LeftPanel, LeftPanel.ActualWidth, LeftPanel.ActualHeight);
-                var rightPanelDimensions = GetPhysicalDimensions(RightPanel, RightPanel.ActualWidth, RightPanel.ActualHeight);
-
-                Debug.WriteLine($"Left Panel - Width: {leftPanelDimensions.widthInPixels}, Height: {leftPanelDimensions.heightInPixels}");
-                Debug.WriteLine($"Right Panel - Width: {rightPanelDimensions.widthInPixels}, Height: {rightPanelDimensions.heightInPixels}");
-
                 retroarchProcessLeft = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
                 retroarchProcessRight = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
 
@@ -71,6 +49,12 @@ namespace monitor_splitter
             try
             {
                 int closedWindows = 0;
+                var dpiScale = VisualTreeHelper.GetDpi(this);
+                
+                // Panels are symmetrical
+                panelWidth = (int)(LeftPanel.ActualWidth * dpiScale.DpiScaleX);
+                panelHeight = (int)(LeftPanel.ActualHeight * dpiScale.DpiScaleY);
+
                 while (true)
                 {
                     Thread.Sleep(500);
@@ -81,7 +65,8 @@ namespace monitor_splitter
                         if (!windows.Any())
                         {
                             closedWindows++;
-                            if (closedWindows == 3)
+                            // Higher number = more time for slower systems
+                            if (closedWindows == 5)
                             {
                                 Dispatcher.Invoke(() => Environment.Exit(0));
                             }
@@ -96,31 +81,7 @@ namespace monitor_splitter
                             {
                                 Dispatcher.Invoke(() =>
                                 {
-                                    SetParent(window, new WindowInteropHelper(this).Handle);
-
-                                    var screen = SystemParameters.WorkArea;
-                                    var dpiScale = VisualTreeHelper.GetDpi(this);
-
-                                    int leftPanelWidth = (int)(LeftPanel.ActualWidth * dpiScale.DpiScaleX);
-                                    int leftPanelHeight = (int)(LeftPanel.ActualHeight * dpiScale.DpiScaleY);
-                                    int rightPanelWidth = (int)(RightPanel.ActualWidth * dpiScale.DpiScaleX);
-                                    int rightPanelHeight = (int)(RightPanel.ActualHeight * dpiScale.DpiScaleY);
-
-                                    Debug.WriteLine($"Screen Width: {screen.Width}, Screen Height: {screen.Height}");
-                                    Debug.WriteLine($"Left Panel Width: {leftPanelWidth}, Left Panel Height: {leftPanelHeight}");
-                                    Debug.WriteLine($"Right Panel Width: {rightPanelWidth}, Right Panel Height: {rightPanelHeight}");
-
-                                    if (process == retroarchProcessLeft)
-                                    {
-                                        SetWindowPos(window, IntPtr.Zero, 0, 0, leftPanelWidth - 1, leftPanelHeight, SWP_NOZORDER);
-                                    }
-                                    else if (process == retroarchProcessRight)
-                                    {
-                                        SetWindowPos(window, IntPtr.Zero, leftPanelWidth + 1, 0, rightPanelWidth - 1, rightPanelHeight, SWP_NOZORDER);
-                                    }
-
-                                    long windowStyles = GetWindowLong(window, GWL_STYLE);
-                                    SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
+                                    positionWindows(process, window);
                                 });
                             }
                         }
@@ -132,7 +93,6 @@ namespace monitor_splitter
                 Dispatcher.Invoke(() => MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error));
             }
         }
-
 
         private static List<IntPtr> GetProcessWindows(int processId)
         {
@@ -147,6 +107,23 @@ namespace monitor_splitter
                 return true;
             }, IntPtr.Zero);
             return windowHandles;
+        }
+
+        private void positionWindows(Process process, nint window)
+        {
+            SetParent(window, new WindowInteropHelper(this).Handle);
+
+            if (process == retroarchProcessLeft)
+            {
+                SetWindowPos(window, IntPtr.Zero, 0, 0, panelWidth - 1, panelHeight, SWP_NOZORDER);
+            }
+            else if (process == retroarchProcessRight)
+            {
+                SetWindowPos(window, IntPtr.Zero, panelWidth + 1, 0, panelWidth - 1, panelHeight, SWP_NOZORDER);
+            }
+
+            long windowStyles = GetWindowLong(window, GWL_STYLE);
+            SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
         }
 
         [DllImport("user32.dll", SetLastError = true)]

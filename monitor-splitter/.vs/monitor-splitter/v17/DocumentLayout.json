@@ -42,12 +42,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 5,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -113,9 +109,9 @@
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\matth\\Downloads\\git\\retroarch-splitscreen\\monitor-splitter\\monitor-splitter\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "monitor-splitter\\MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\matth\\Downloads\\git\\retroarch-splitscreen\\monitor-splitter\\monitor-splitter\\MainWindow.xaml.cs",
-              "RelativeToolTip": "monitor-splitter\\MainWindow.xaml.cs",
-              "ViewState": "AQIAAEQAAAAAAAAAAAAmwEgAAAAmAAAA",
+              "ToolTip": "C:\\Users\\matth\\Downloads\\git\\retroarch-splitscreen\\monitor-splitter\\monitor-splitter\\MainWindow.xaml.cs*",
+              "RelativeToolTip": "monitor-splitter\\MainWindow.xaml.cs*",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAswGUAAABgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-24T22:39:34.131Z",
               "EditorCaption": ""
