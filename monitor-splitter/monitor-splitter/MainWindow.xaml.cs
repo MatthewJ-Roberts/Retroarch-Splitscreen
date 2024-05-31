@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -18,6 +19,7 @@ namespace monitor_splitter
 
         private int panelWidth;
         private int panelHeight;
+        private const int borderSize = 1;  // Adjust this value to make the middle border more prominent
 
         public MainWindow()
         {
@@ -50,10 +52,10 @@ namespace monitor_splitter
             {
                 int closedWindows = 0;
                 var dpiScale = VisualTreeHelper.GetDpi(this);
-                
+
                 // Panels are symmetrical
                 panelWidth = (int)(LeftPanel.ActualWidth * dpiScale.DpiScaleX);
-                panelHeight = (int)(LeftPanel.ActualHeight * dpiScale.DpiScaleY);
+                panelHeight = (int)((LeftPanel.ActualHeight * dpiScale.DpiScaleY) - borderSize / 2);
 
                 while (true)
                 {
@@ -115,11 +117,11 @@ namespace monitor_splitter
 
             if (process == retroarchProcessLeft)
             {
-                SetWindowPos(window, IntPtr.Zero, 0, 0, panelWidth - 1, panelHeight, SWP_NOZORDER);
+                SetWindowPos(window, IntPtr.Zero, 0, 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
             }
             else if (process == retroarchProcessRight)
             {
-                SetWindowPos(window, IntPtr.Zero, panelWidth + 1, 0, panelWidth - 1, panelHeight, SWP_NOZORDER);
+                SetWindowPos(window, IntPtr.Zero, panelWidth + borderSize, 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
             }
 
             long windowStyles = GetWindowLong(window, GWL_STYLE);
