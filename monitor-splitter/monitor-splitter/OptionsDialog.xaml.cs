@@ -39,8 +39,15 @@ namespace monitor_splitter
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
-            SplitDirection = ((ComboBoxItem)SplitDirectionComboBox.SelectedItem).Content.ToString();
             NumberOfPlayers = NumberOfPlayersComboBox.SelectedIndex + 2;
+            if (NumberOfPlayers == 2)
+            {
+                SplitDirection = ((ComboBoxItem)SplitDirectionComboBox.SelectedItem).Content.ToString();
+            } else
+            {
+                SplitDirection = "N/A";
+            }
+            
             ExePath = ExePathTextBox.Text;
 
             // Save preferences

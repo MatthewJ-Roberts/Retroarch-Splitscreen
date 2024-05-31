@@ -24,6 +24,7 @@ C:\Users\matth\Downloads\git\monitor-splitter\monitor-splitter\obj\Release\net8.
 C:\Users\matth\Downloads\git\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\monitor-splitter.genruntimeconfig.cache
 C:\Users\matth\Downloads\git\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\ref\monitor-splitter.dll
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\monitor-splitter.exe
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\monitor-splitter.dll.config
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\monitor-splitter.deps.json
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\monitor-splitter.runtimeconfig.json
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\monitor-splitter.dll
@@ -31,7 +32,9 @@ C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-spli
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\System.Management.dll
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Release\net8.0-windows\runtimes\win\lib\net8.0\System.Management.dll
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\monitor-splitter.csproj.AssemblyReference.cache
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\OptionsDialog.baml
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\MainWindow.g.cs
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\OptionsDialog.g.cs
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\App.g.cs
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\monitor-splitter_Content.g.cs
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Release\net8.0-windows\monitor-splitter_MarkupCompile.cache
