@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -128,10 +129,29 @@ namespace monitor_splitter
 
             int processIndex = Array.IndexOf(retroarchProcesses, process);
 
+            switch (NumberOfPlayers)
+            {
+                case 2:
+                    twoPlayers(process, window, dpiScale, processIndex);
+                    break;
+                case 3:
+                    threePlayers(process, window, dpiScale, processIndex);
+                    break;
+                case 4:
+                    fourPlayers(process, window, dpiScale, processIndex);
+                    break;
+            }
+
+            long windowStyles = GetWindowLong(window, GWL_STYLE);
+            SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
+        }
+
+        private void twoPlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        {
             if (SplitDirection == "Vertical")
             {
                 // Vertical split logic
-                panelWidth = (int)((TopLeftPanel.ActualWidth + TopRightPanel.ActualWidth) * dpiScale.DpiScaleX / NumberOfPlayers);
+                panelWidth = (int)((TopLeftPanel.ActualWidth + TopRightPanel.ActualWidth) * dpiScale.DpiScaleX / 2);
                 panelHeight = (int)((TopLeftPanel.ActualHeight + TopRightPanel.ActualHeight) * dpiScale.DpiScaleY);
 
                 SetWindowPos(window, IntPtr.Zero, processIndex * (panelWidth + borderSize), 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
@@ -140,13 +160,39 @@ namespace monitor_splitter
             {
                 // Horizontal split logic
                 panelWidth = (int)((TopLeftPanel.ActualWidth + TopRightPanel.ActualWidth) * dpiScale.DpiScaleX);
-                panelHeight = (int)((TopLeftPanel.ActualHeight + TopRightPanel.ActualHeight) * dpiScale.DpiScaleY / NumberOfPlayers);
+                panelHeight = (int)((TopLeftPanel.ActualHeight + TopRightPanel.ActualHeight) * dpiScale.DpiScaleY / 2);
 
                 SetWindowPos(window, IntPtr.Zero, 0, processIndex * (panelHeight + borderSize), panelWidth, panelHeight - (borderSize / 2), SWP_NOZORDER);
             }
+        }
 
-            long windowStyles = GetWindowLong(window, GWL_STYLE);
-            SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
+        private void threePlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        {
+            panelWidth = (int)(TopLeftPanel.ActualWidth * dpiScale.DpiScaleX);
+            panelHeight = (int)(TopLeftPanel.ActualHeight * dpiScale.DpiScaleY);
+
+            if (processIndex < 2)
+            {
+                SetWindowPos(window, IntPtr.Zero, processIndex * (panelWidth + borderSize), 0, panelWidth - (borderSize / 2), panelHeight - (borderSize / 2), SWP_NOZORDER);
+            }
+            else
+            {
+                SetWindowPos(window, IntPtr.Zero, 0, panelHeight + borderSize, panelWidth + (int)TopRightPanel.ActualWidth, panelHeight - (borderSize / 2), SWP_NOZORDER);
+            }
+        }
+
+        private void fourPlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        {
+            panelWidth = (int)(TopLeftPanel.ActualWidth * dpiScale.DpiScaleX);
+            panelHeight = (int)(TopLeftPanel.ActualHeight * dpiScale.DpiScaleY);
+
+            if (processIndex < 2)
+            {
+                SetWindowPos(window, IntPtr.Zero, processIndex * (panelWidth + borderSize), 0, panelWidth - (borderSize / 2), panelHeight - (borderSize / 2), SWP_NOZORDER);
+            } else
+            {
+                SetWindowPos(window, IntPtr.Zero, (processIndex - 2) * (panelWidth + borderSize), panelHeight + borderSize, panelWidth - (borderSize / 2), panelHeight - (borderSize / 2), SWP_NOZORDER);
+            }
         }
 
         [DllImport("user32.dll", SetLastError = true)]

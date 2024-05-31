@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("monitor-splitter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6f966154e7eb161ca97beb1580aa56ddd4a8599")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+305d06c8032ca1f40a2d44426d979d2990602ee3")]
 [assembly: System.Reflection.AssemblyProductAttribute("monitor-splitter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("monitor-splitter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

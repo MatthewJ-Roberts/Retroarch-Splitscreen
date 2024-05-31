@@ -21,7 +21,7 @@
 
         <StackPanel Grid.Row="1" Margin="10">
             <TextBlock Text="Number of Players:" />
-            <ComboBox Name="NumberOfPlayersComboBox" SelectedIndex="0">
+            <ComboBox Name="NumberOfPlayersComboBox" SelectedIndex="0" SelectionChanged="NumberOfPlayersComboBox_SelectionChanged">
                 <ComboBoxItem Content="2" />
                 <ComboBoxItem Content="3" />
                 <ComboBoxItem Content="4" />

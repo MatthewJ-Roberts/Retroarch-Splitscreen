@@ -22,6 +22,9 @@ namespace monitor_splitter
             SplitDirectionComboBox.SelectedIndex = Settings.Default.SplitDirection == "Vertical" ? 1 : 0;
             NumberOfPlayersComboBox.SelectedIndex = Settings.Default.NumberOfPlayers - 2;
             ExePathTextBox.Text = Settings.Default.ExePath;
+
+            // Set initial state of SplitDirectionComboBox
+            SplitDirectionComboBox.IsEnabled = Settings.Default.NumberOfPlayers == 2;
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
@@ -48,6 +51,25 @@ namespace monitor_splitter
 
             DialogResult = true;
             Close();
+        }
+
+        private void NumberOfPlayersComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (NumberOfPlayersComboBox.SelectedIndex >= 1) // 3 or 4 players
+            {
+                SplitDirectionComboBox.IsEnabled = false;
+                if (!SplitDirectionComboBox.Items.Contains("N/A"))
+                {
+                    SplitDirectionComboBox.Items.Add("N/A");
+                    SplitDirectionComboBox.SelectedItem = "N/A";
+                }
+            }
+            else
+            {
+                SplitDirectionComboBox.IsEnabled = true;
+                SplitDirectionComboBox.Items.Remove("N/A");
+                SplitDirectionComboBox.SelectedIndex = Settings.Default.SplitDirection == "Vertical" ? 1 : 0;
+            }
         }
     }
 }
