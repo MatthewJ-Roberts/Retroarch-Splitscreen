@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\App.xaml
-11407045341
+2-1668107784
 1-984944500
-61827346562
+8-1618353465
 199-1380958474
-MainWindow.xaml;
+MainWindow.xaml;OptionsDialog.xaml;
 
-True
+False
 

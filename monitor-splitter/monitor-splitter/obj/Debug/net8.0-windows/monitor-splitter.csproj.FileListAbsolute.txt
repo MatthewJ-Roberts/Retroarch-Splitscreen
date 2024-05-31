@@ -48,3 +48,6 @@ C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-spli
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\monitor-splitter.pdb
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\monitor-splitter.genruntimeconfig.cache
 C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\ref\monitor-splitter.dll
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\OptionsDialog.baml
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\obj\Debug\net8.0-windows\OptionsDialog.g.cs
+C:\Users\matth\Downloads\git\retroarch-splitscreen\monitor-splitter\monitor-splitter\bin\Debug\net8.0-windows\monitor-splitter.dll.config

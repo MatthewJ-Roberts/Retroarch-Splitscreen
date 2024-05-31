@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -14,29 +13,46 @@ namespace monitor_splitter
 {
     public partial class MainWindow : Window
     {
-        private Process retroarchProcessLeft;
-        private Process retroarchProcessRight;
+        private Process[] retroarchProcesses;
 
         private int panelWidth;
         private int panelHeight;
-        private const int borderSize = 1;  // Adjust this value to make the middle border more prominent
+        private const int borderSize = 1;
 
         public MainWindow()
         {
             InitializeComponent();
+            ShowOptionsDialog();
             WindowState = WindowState.Maximized; // Open the window in fullscreen mode
             WindowStyle = WindowStyle.None; // Remove window border and title bar
-            retroarchProcessLeft = new Process();
-            retroarchProcessRight = new Process();
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
+        }
+
+        private void ShowOptionsDialog()
+        {
+            OptionsDialog optionsDialog = new OptionsDialog();
+            if (optionsDialog.ShowDialog() == true)
+            {
+                // Store preferences
+                SplitDirection = optionsDialog.SplitDirection;
+                NumberOfPlayers = optionsDialog.NumberOfPlayers;
+                ExePath = optionsDialog.ExePath;
+            }
+            else
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             try
             {
-                retroarchProcessLeft = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
-                retroarchProcessRight = Process.Start("C:\\RetroArch-Win64\\retroarch.exe");
+                retroarchProcesses = new Process[NumberOfPlayers];
+                for (int i = 0; i < NumberOfPlayers; i++)
+                {
+                    retroarchProcesses[i] = Process.Start(ExePath);
+                }
 
                 Task.Run(() => ListenForWindows());
             }
@@ -53,21 +69,16 @@ namespace monitor_splitter
                 int closedWindows = 0;
                 var dpiScale = VisualTreeHelper.GetDpi(this);
 
-                // Panels are symmetrical
-                panelWidth = (int)(LeftPanel.ActualWidth * dpiScale.DpiScaleX);
-                panelHeight = (int)((LeftPanel.ActualHeight * dpiScale.DpiScaleY) - borderSize / 2);
-
                 while (true)
                 {
                     Thread.Sleep(500);
-                    foreach (Process process in new[] { retroarchProcessLeft, retroarchProcessRight })
+                    foreach (var process in retroarchProcesses)
                     {
                         if (process == null) continue;
                         var windows = GetProcessWindows(process.Id);
                         if (!windows.Any())
                         {
                             closedWindows++;
-                            // Higher number = more time for slower systems
                             if (closedWindows == 5)
                             {
                                 Dispatcher.Invoke(() => Environment.Exit(0));
@@ -83,7 +94,7 @@ namespace monitor_splitter
                             {
                                 Dispatcher.Invoke(() =>
                                 {
-                                    positionWindows(process, window);
+                                    positionWindows(process, window, dpiScale);
                                 });
                             }
                         }
@@ -111,17 +122,27 @@ namespace monitor_splitter
             return windowHandles;
         }
 
-        private void positionWindows(Process process, nint window)
+        private void positionWindows(Process process, nint window, DpiScale dpiScale)
         {
             SetParent(window, new WindowInteropHelper(this).Handle);
 
-            if (process == retroarchProcessLeft)
+            int processIndex = Array.IndexOf(retroarchProcesses, process);
+
+            if (SplitDirection == "Vertical")
             {
-                SetWindowPos(window, IntPtr.Zero, 0, 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
+                // Vertical split logic
+                panelWidth = (int)((TopLeftPanel.ActualWidth + TopRightPanel.ActualWidth) * dpiScale.DpiScaleX / NumberOfPlayers);
+                panelHeight = (int)((TopLeftPanel.ActualHeight + TopRightPanel.ActualHeight) * dpiScale.DpiScaleY);
+
+                SetWindowPos(window, IntPtr.Zero, processIndex * (panelWidth + borderSize), 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
             }
-            else if (process == retroarchProcessRight)
+            else
             {
-                SetWindowPos(window, IntPtr.Zero, panelWidth + borderSize, 0, panelWidth - (borderSize / 2), panelHeight, SWP_NOZORDER);
+                // Horizontal split logic
+                panelWidth = (int)((TopLeftPanel.ActualWidth + TopRightPanel.ActualWidth) * dpiScale.DpiScaleX);
+                panelHeight = (int)((TopLeftPanel.ActualHeight + TopRightPanel.ActualHeight) * dpiScale.DpiScaleY / NumberOfPlayers);
+
+                SetWindowPos(window, IntPtr.Zero, 0, processIndex * (panelHeight + borderSize), panelWidth, panelHeight - (borderSize / 2), SWP_NOZORDER);
             }
 
             long windowStyles = GetWindowLong(window, GWL_STYLE);
@@ -158,5 +179,9 @@ namespace monitor_splitter
         private const int WS_CAPTION = 0x00C00000;
         private const int WS_THICKFRAME = 0x00040000;
         private const uint SWP_NOZORDER = 0x0004;
+
+        private string SplitDirection { get; set; }
+        private int NumberOfPlayers { get; set; }
+        private string ExePath { get; set; }
     }
 }

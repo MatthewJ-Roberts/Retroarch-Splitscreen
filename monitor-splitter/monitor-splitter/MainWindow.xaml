@@ -11,7 +11,13 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border Name="LeftPanel" BorderBrush="Black" BorderThickness="1" Grid.Column="0" />
-        <Border Name="RightPanel" BorderBrush="Black" BorderThickness="1" Grid.Column="1" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Name="TopLeftPanel" BorderBrush="Black" BorderThickness="1" Grid.Row="0" Grid.Column="0" />
+        <Border Name="TopRightPanel" BorderBrush="Black" BorderThickness="1" Grid.Row="0" Grid.Column="1" />
+        <Border Name="BottomLeftPanel" BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.Column="0" />
+        <Border Name="BottomRightPanel" BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </Window>
