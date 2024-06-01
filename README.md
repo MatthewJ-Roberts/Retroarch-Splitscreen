@@ -23,4 +23,5 @@ How to use:
 5. Press "Launch Splitter"
 6. Ensure you have at least 2 different controllers and configure them within the Retroarch instances (set the controller to "Port 1" in both instances, and set "Port 2" to "N/A" in both instances)
 7. Repeat step 6 for however many controllers you have, ensuring each Retroarch instance has their dedicated controller assigned to "Port 1"
-8. Done!
+8. Make sure that the following is disabled: Settings --> User Interface --> Pause Content When Not Active --> Off
+9. Done!
