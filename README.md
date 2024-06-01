@@ -1,4 +1,4 @@
-# Retroarch-Splitscreen
+# Retroarch Splitscreen
 A screen splitter for Retroarch - load two instances of Retroarch seamlessly and simultaneously to play with a friend!
 
 **WARNING: This was made for Retroarch, but can technically launch ANY .exe. Only Retroarch's functionality has been tested, and development for other tools/games is not realistic.**
