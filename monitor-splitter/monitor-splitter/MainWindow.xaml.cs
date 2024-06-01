@@ -177,7 +177,7 @@ namespace monitor_splitter
             }
             else
             {
-                SetWindowPos(window, IntPtr.Zero, 0, panelHeight + borderSize, panelWidth + (int)TopRightPanel.ActualWidth, panelHeight - (borderSize / 2), SWP_NOZORDER);
+                SetWindowPos(window, IntPtr.Zero, 0, panelHeight + borderSize, panelWidth + (int)(TopRightPanel.ActualWidth * dpiScale.DpiScaleX), panelHeight - (borderSize / 2), SWP_NOZORDER);
             }
         }
 
