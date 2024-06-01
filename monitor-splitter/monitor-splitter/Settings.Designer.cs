@@ -49,7 +49,7 @@ namespace monitor_splitter {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\RetroArch-Win64\\retroarch.exe")]
         public string ExePath {
             get {
                 return ((string)(this["ExePath"]));

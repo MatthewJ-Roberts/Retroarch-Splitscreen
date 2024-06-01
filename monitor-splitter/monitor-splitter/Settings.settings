@@ -9,7 +9,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="ExePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">C:\RetroArch-Win64\retroarch.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>
