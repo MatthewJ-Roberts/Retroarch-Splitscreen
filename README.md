@@ -29,7 +29,7 @@ A screen splitter for Retroarch - load two instances of Retroarch seamlessly and
 6. Press "Browse" and select the location of your Retroarch config file:
    - Default path: `C:\RetroArch-Win64\retroarch.cfg`
 7. Set the Menu Scale Factor (0.2 - 5):
-   - Description: How big the Retroarch menus will be. Does not impact gameplay, purely for menu navigation purposes. Will not overwrite the old value so no need to worry about having to changing it back
+   - Description: How big the Retroarch menus will be. Does not impact gameplay, purely for menu navigation purposes. Will not overwrite the old value so no need to worry about having to change it back
    - Default value: 0.5
 8. Press "Launch Splitter".
 9. Ensure you have at least 2 different controllers and configure them within the Retroarch instances:
