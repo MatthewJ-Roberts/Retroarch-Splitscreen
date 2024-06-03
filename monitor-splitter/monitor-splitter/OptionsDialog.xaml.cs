@@ -71,7 +71,7 @@ namespace monitor_splitter
             Settings.Default.NumberOfPlayers = NumberOfPlayers;
             Settings.Default.ExePath = ExePath;
             Settings.Default.ConfigPath = ConfigPath;
-            ScaleFactorDoubleUpDown.Text = Settings.Default.ScaleFactor.ToString();
+            Settings.Default.ScaleFactor = ScaleFactor;
             Settings.Default.Save();
 
             DialogResult = true;
