@@ -11,5 +11,11 @@
     <Setting Name="ExePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\RetroArch-Win64\retroarch.exe</Value>
     </Setting>
+    <Setting Name="ConfigPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\RetroArch-Win64\retroarch.cfg</Value>
+    </Setting>
+    <Setting Name="ScaleFactor" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
