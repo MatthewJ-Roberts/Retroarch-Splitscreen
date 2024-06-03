@@ -9,6 +9,8 @@ namespace monitor_splitter
         public string SplitDirection { get; private set; }
         public int NumberOfPlayers { get; private set; }
         public string ExePath { get; private set; }
+        public string ConfigPath { get; private set; }
+        public double ScaleFactor { get; private set; }
 
         public OptionsDialog()
         {
@@ -22,18 +24,30 @@ namespace monitor_splitter
             SplitDirectionComboBox.SelectedIndex = Settings.Default.SplitDirection == "Vertical" ? 1 : 0;
             NumberOfPlayersComboBox.SelectedIndex = Settings.Default.NumberOfPlayers - 2;
             ExePathTextBox.Text = Settings.Default.ExePath;
+            ConfigPathTextBox.Text = Settings.Default.ConfigPath;
+            ScaleFactorDoubleUpDown.Value = Settings.Default.ScaleFactor;
 
             // Set initial state of SplitDirectionComboBox
             SplitDirectionComboBox.IsEnabled = Settings.Default.NumberOfPlayers == 2;
         }
 
-        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        private void BrowseButton_Click_Exe(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 ExePathTextBox.Text = openFileDialog.FileName;
+            }
+        }
+
+        private void BrowseButton_Click_Config(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Configuration files (*.cfg)|*.cfg|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ConfigPathTextBox.Text = openFileDialog.FileName;
             }
         }
 
@@ -49,11 +63,15 @@ namespace monitor_splitter
             }
             
             ExePath = ExePathTextBox.Text;
+            ConfigPath = ConfigPathTextBox.Text;
+            ScaleFactor = (double)ScaleFactorDoubleUpDown.Value;
 
             // Save preferences
             Settings.Default.SplitDirection = SplitDirection;
             Settings.Default.NumberOfPlayers = NumberOfPlayers;
             Settings.Default.ExePath = ExePath;
+            Settings.Default.ConfigPath = ConfigPath;
+            ScaleFactorDoubleUpDown.Text = Settings.Default.ScaleFactor.ToString();
             Settings.Default.Save();
 
             DialogResult = true;
