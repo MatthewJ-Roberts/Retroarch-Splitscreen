@@ -16,12 +16,27 @@ Use Cases:
 4. Anything else you can think of!
 
 How to use:
-1. Run "Retroarch Splitscreen.exe"
-2. Select the split direction
-3. Select the number of players
-4. Press "Browse" and select the location of your Retroarch executable (default path: "C:\RetroArch-Win64\retroarch.exe")
-5. Press "Launch Splitter"
-6. Ensure you have at least 2 different controllers and configure them within the Retroarch instances (set the controller to "Port 1" in both instances, and set "Port 2" to "N/A" in both instances)
-7. Repeat step 6 for however many controllers you have, ensuring each Retroarch instance has their dedicated controller assigned to "Port 1"
-8. Make sure that the following is disabled: Settings --> User Interface --> Pause Content When Not Active --> Off
-9. Done!
+1. Download the latest release
+2. Run "Retroarch Splitscreen.exe"
+3. Select the split direction
+4. Select the number of players
+5. Press "Browse" and select the location of your Retroarch executable (default path: "C:\RetroArch-Win64\retroarch.exe")
+6. Press "Launch Splitter"
+7. Ensure you have at least 2 different controllers and configure them within the Retroarch instances (set a designated controller to "Port 1" in both instances, and set "Port 2" to "N/A" in both instances)
+8. Repeat step 6 for however many controllers you have, ensuring each Retroarch instance has their dedicated controller assigned to "Port 1"
+9. Make sure that the following is disabled: Settings --> User Interface --> Pause Content When Not Active --> Off
+10. Done!
+
+Examples screenshots:
+**2 Players: Horizontal**
+![Screenshot 2024-06-03 152323](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/eff5a23e-44da-44fe-a7f6-f2da4e446194)
+
+**2 Players: Vertical**
+![Screenshot 2024-06-03 152239](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/0b9982d9-b415-4e75-9089-64a0cfc884a7)
+
+**3 Players**
+![Screenshot 2024-06-03 152144](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/da38740a-bfe3-4bda-a509-e563cb6bf327)
+
+**4 Players**
+![Screenshot 2024-06-03 151535](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/fae57546-5bf8-44ea-b045-acb9df32d357)
+
