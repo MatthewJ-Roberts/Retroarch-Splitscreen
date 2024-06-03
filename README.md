@@ -29,15 +29,15 @@ How to use:
 
 Examples screenshots:
 
-**2 Players: Horizontal**
+_2 Players: Horizontal_
 ![Screenshot 2024-06-03 151535](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/fae57546-5bf8-44ea-b045-acb9df32d357)
 
-**2 Players: Vertical**
+_2 Players: Vertical_
 ![Screenshot 2024-06-03 152144](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/da38740a-bfe3-4bda-a509-e563cb6bf327)
 
-**3 Players**
+_3 Players_
 ![Screenshot 2024-06-03 152239](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/0b9982d9-b415-4e75-9089-64a0cfc884a7)
 
-**4 Players**
+_4 Players_
 ![Screenshot 2024-06-03 152323](https://github.com/MatthewJ-Roberts/Retroarch-Splitscreen/assets/63058876/eff5a23e-44da-44fe-a7f6-f2da4e446194)
 
