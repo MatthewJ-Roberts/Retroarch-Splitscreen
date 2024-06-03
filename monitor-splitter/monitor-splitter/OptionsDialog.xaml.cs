@@ -10,7 +10,7 @@ namespace monitor_splitter
         public int NumberOfPlayers { get; private set; }
         public string ExePath { get; private set; }
         public string ConfigPath { get; private set; }
-        public string ScaleFactor { get; private set; }
+        public double ScaleFactor { get; private set; }
 
         public OptionsDialog()
         {
@@ -25,7 +25,7 @@ namespace monitor_splitter
             NumberOfPlayersComboBox.SelectedIndex = Settings.Default.NumberOfPlayers - 2;
             ExePathTextBox.Text = Settings.Default.ExePath;
             ConfigPathTextBox.Text = Settings.Default.ConfigPath;
-            ScaleFactorDoubleUpDown.Text = Settings.Default.ScaleFactor.ToString();
+            ScaleFactorDoubleUpDown.Value = Settings.Default.ScaleFactor;
 
             // Set initial state of SplitDirectionComboBox
             SplitDirectionComboBox.IsEnabled = Settings.Default.NumberOfPlayers == 2;
@@ -64,6 +64,7 @@ namespace monitor_splitter
             
             ExePath = ExePathTextBox.Text;
             ConfigPath = ConfigPathTextBox.Text;
+            ScaleFactor = (double)ScaleFactorDoubleUpDown.Value;
 
             // Save preferences
             Settings.Default.SplitDirection = SplitDirection;

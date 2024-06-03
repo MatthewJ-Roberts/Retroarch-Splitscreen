@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
@@ -20,10 +21,18 @@ namespace monitor_splitter
         private int panelHeight;
         private const int borderSize = 1;
 
+        private string SplitDirection { get; set; }
+        private int NumberOfPlayers { get; set; }
+        private string ExePath { get; set; }
+        private string ConfigPath { get; set; }
+        private double ScaleFactor { get; set; }
+        private double OriginalScaleFactor;
+
         public MainWindow()
         {
             InitializeComponent();
             ShowOptionsDialog();
+            SetScaleFactor(ScaleFactor, true);
             WindowState = WindowState.Maximized; // Open the window in fullscreen mode
             WindowStyle = WindowStyle.None; // Remove window border and title bar
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
@@ -38,10 +47,48 @@ namespace monitor_splitter
                 SplitDirection = optionsDialog.SplitDirection;
                 NumberOfPlayers = optionsDialog.NumberOfPlayers;
                 ExePath = optionsDialog.ExePath;
+                ConfigPath = optionsDialog.ConfigPath;
+                ScaleFactor = optionsDialog.ScaleFactor;
             }
             else
             {
                 Application.Current.Shutdown();
+            }
+        }
+
+        // Setting the menu scale factor to what the user specifies for all intances
+        // Default is 0.5 (works well for most screens)
+        public void SetScaleFactor(double updatedScaleFactor, bool launching)
+        {
+            try
+            {
+                if (File.Exists(ConfigPath))
+                {
+                    string[] configLines = File.ReadAllLines(ConfigPath);
+
+                    for (int i = 0; i < configLines.Length; i++)
+                    {
+                        if (configLines[i].StartsWith("menu_scale_factor"))
+                        {
+                            // Store the original scale factor value
+                            if (launching) OriginalScaleFactor = double.Parse(configLines[i].Split('=')[1].Trim().Trim('"'));
+
+                            configLines[i] = $"menu_scale_factor = \"{updatedScaleFactor}\"";
+                            // Save the modified configuration back to the file
+                            File.WriteAllLines(ConfigPath, configLines);
+                            Console.WriteLine("Scale factor set successfully.");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("retroarch.cfg file not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
@@ -82,6 +129,7 @@ namespace monitor_splitter
                             closedWindows++;
                             if (closedWindows == 5)
                             {
+                                SetScaleFactor(OriginalScaleFactor, false);
                                 Dispatcher.Invoke(() => Environment.Exit(0));
                             }
                         }
@@ -226,8 +274,5 @@ namespace monitor_splitter
         private const int WS_THICKFRAME = 0x00040000;
         private const uint SWP_NOZORDER = 0x0004;
 
-        private string SplitDirection { get; set; }
-        private int NumberOfPlayers { get; set; }
-        private string ExePath { get; set; }
     }
 }
