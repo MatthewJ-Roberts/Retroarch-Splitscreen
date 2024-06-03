@@ -47,11 +47,9 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Margin="10">
-            <TextBlock Text="Menu Scale Factor (0.2 - 5):" />
-            <StackPanel Orientation="Horizontal">
-                <xctk:DoubleUpDown Name="ScaleFactorTextBox" Width="250" Minimum="0.2" Maximum="5" Increment="0.1" />
-            </StackPanel>
+        <StackPanel Grid.Row="4" Margin="10" Orientation="Horizontal">
+            <TextBlock Text="Menu Scale Factor (0.2 - 5): " />
+            <xctk:DoubleUpDown Name="ScaleFactorDoubleUpDown" Minimum="0.2" Maximum="5" Increment="0.01" FormatString="F2" />
         </StackPanel>
 
         <Button Grid.Row="5" Content="Launch Splitter" Click="LaunchButton_Click" Margin="10" HorizontalAlignment="Center" />

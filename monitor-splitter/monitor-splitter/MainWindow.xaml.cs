@@ -132,13 +132,13 @@ namespace monitor_splitter
             switch (NumberOfPlayers)
             {
                 case 2:
-                    twoPlayers(process, window, dpiScale, processIndex);
+                    twoPlayers(window, dpiScale, processIndex);
                     break;
                 case 3:
-                    threePlayers(process, window, dpiScale, processIndex);
+                    threePlayers(window, dpiScale, processIndex);
                     break;
                 case 4:
-                    fourPlayers(process, window, dpiScale, processIndex);
+                    fourPlayers(window, dpiScale, processIndex);
                     break;
             }
 
@@ -146,7 +146,7 @@ namespace monitor_splitter
             SetWindowLong(window, GWL_STYLE, windowStyles & ~WS_CAPTION & ~WS_THICKFRAME);
         }
 
-        private void twoPlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        private void twoPlayers(nint window, DpiScale dpiScale, int processIndex)
         {
             if (SplitDirection == "Vertical")
             {
@@ -166,7 +166,7 @@ namespace monitor_splitter
             }
         }
 
-        private void threePlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        private void threePlayers(nint window, DpiScale dpiScale, int processIndex)
         {
             panelWidth = (int)(TopLeftPanel.ActualWidth * dpiScale.DpiScaleX);
             panelHeight = (int)(TopLeftPanel.ActualHeight * dpiScale.DpiScaleY);
@@ -181,7 +181,7 @@ namespace monitor_splitter
             }
         }
 
-        private void fourPlayers(Process process, nint window, DpiScale dpiScale, int processIndex)
+        private void fourPlayers(nint window, DpiScale dpiScale, int processIndex)
         {
             panelWidth = (int)(TopLeftPanel.ActualWidth * dpiScale.DpiScaleX);
             panelHeight = (int)(TopLeftPanel.ActualHeight * dpiScale.DpiScaleY);
