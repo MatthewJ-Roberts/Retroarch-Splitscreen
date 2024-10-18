@@ -27,12 +27,14 @@ namespace monitor_splitter
         private string ConfigPath { get; set; }
         private double ScaleFactor { get; set; }
         private double OriginalScaleFactor;
+        private int OriginalMaxUsers;
 
         public MainWindow()
         {
             InitializeComponent();
             ShowOptionsDialog();
             SetScaleFactor(ScaleFactor, true);
+            limitMaxPlayers(true);
             WindowState = WindowState.Maximized; // Open the window in fullscreen mode
             WindowStyle = WindowStyle.None; // Remove window border and title bar
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
@@ -92,6 +94,80 @@ namespace monitor_splitter
             }
         }
 
+        private void setJoypadIndex(int currPlayerNum)
+        {
+            try
+            {
+                if (File.Exists(ConfigPath))
+                {
+                    string[] configLines = File.ReadAllLines(ConfigPath);
+
+                    for (int i = 0; i < configLines.Length; i++)
+                    {
+                        // Only checking for player1, since configs are set to only allow 1 player per instance
+                        if (configLines[i].StartsWith("input_player1_joypad_index"))
+                        {
+                            configLines[i] = $"input_player1_joypad_index = \"{currPlayerNum}\"";
+                            
+                            // Save the modified configuration back to the file
+                            File.WriteAllLines(ConfigPath, configLines);
+                            Console.WriteLine($"Joypad Index for player \"{ currPlayerNum }\" set successfully.");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("retroarch.cfg file not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private void limitMaxPlayers(bool launching)
+        {
+            try
+            {
+                if (File.Exists(ConfigPath))
+                {
+                    string[] configLines = File.ReadAllLines(ConfigPath);
+
+                    for (int i = 0; i < configLines.Length; i++)
+                    {
+                        if (configLines[i].StartsWith("input_max_users"))
+                        {
+                            // Store the original max users value
+                            if (launching)
+                            {
+                                OriginalMaxUsers = int.Parse(configLines[i].Split('=')[1].Trim().Trim('"'));
+                                configLines[i] = $"input_max_users = \"1\"";
+                            }
+                            else
+                            {
+                                configLines[i] = $"input_max_users = \"{OriginalMaxUsers}\"";
+                            }
+                            
+                            // Save the modified configuration back to the file
+                            File.WriteAllLines(ConfigPath, configLines);
+                            Console.WriteLine("Max Users set successfully.");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("retroarch.cfg file not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             try
@@ -99,6 +175,7 @@ namespace monitor_splitter
                 retroarchProcesses = new Process[NumberOfPlayers];
                 for (int i = 0; i < NumberOfPlayers; i++)
                 {
+                    setJoypadIndex(i);
                     retroarchProcesses[i] = Process.Start(ExePath);
                 }
 
@@ -130,6 +207,8 @@ namespace monitor_splitter
                             if (closedWindows == 5)
                             {
                                 SetScaleFactor(OriginalScaleFactor, false);
+                                limitMaxPlayers(false);
+                                setJoypadIndex(0);
                                 Dispatcher.Invoke(() => Environment.Exit(0));
                             }
                         }
