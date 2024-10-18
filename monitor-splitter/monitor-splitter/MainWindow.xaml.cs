@@ -143,7 +143,7 @@ namespace monitor_splitter
                             if (launching)
                             {
                                 OriginalMaxUsers = int.Parse(configLines[i].Split('=')[1].Trim().Trim('"'));
-                                configLines[i] = $"input_max_users = \"1\"";
+                                configLines[i] = $"input_max_users = 1";
                             }
                             else
                             {
@@ -177,6 +177,8 @@ namespace monitor_splitter
                 {
                     setJoypadIndex(i);
                     retroarchProcesses[i] = Process.Start(ExePath);
+                    // Sleeping for 0.1s so that the config file can save
+                    Thread.Sleep(100);
                 }
 
                 Task.Run(() => ListenForWindows());
