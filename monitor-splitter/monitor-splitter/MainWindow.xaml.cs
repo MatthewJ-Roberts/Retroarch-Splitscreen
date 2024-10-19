@@ -177,8 +177,8 @@ namespace monitor_splitter
                 {
                     setJoypadIndex(i);
                     retroarchProcesses[i] = Process.Start(ExePath);
-                    // Sleeping for 0.1s so that the config file can save
-                    Thread.Sleep(100);
+                    // Sleeping for 0.5s so that the config file can save
+                    Thread.Sleep(500);
                 }
 
                 Task.Run(() => ListenForWindows());
