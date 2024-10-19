@@ -26,15 +26,17 @@ namespace monitor_splitter
         private string ExePath { get; set; }
         private string ConfigPath { get; set; }
         private double ScaleFactor { get; set; }
-        private double OriginalScaleFactor;
-        private int OriginalMaxUsers;
+        private string OriginalScaleFactor;
+        private string OriginalMaxUsers;
+        // Hard set to 4, as there are only 4 config values to remember
+        private string[] OriginalConfValues = new string[4];
 
         public MainWindow()
         {
             InitializeComponent();
             ShowOptionsDialog();
-            SetScaleFactor(ScaleFactor, true);
-            limitMaxPlayers(true);
+            manipulateConfig(true, 0, "menu_scale_factor", ScaleFactor.ToString());
+            manipulateConfig(true, 1, "input_max_users", "1");
             WindowState = WindowState.Maximized; // Open the window in fullscreen mode
             WindowStyle = WindowStyle.None; // Remove window border and title bar
             ContentRendered += MainWindow_ContentRendered; // Subscribe to the ContentRendered event
@@ -57,10 +59,8 @@ namespace monitor_splitter
                 Application.Current.Shutdown();
             }
         }
-
-        // Setting the menu scale factor to what the user specifies for all intances
-        // Default is 0.5 (works well for most screens)
-        public void SetScaleFactor(double updatedScaleFactor, bool launching)
+        
+        private void manipulateConfig(bool launching, int confPos, string confTarget, string newValue)
         {
             try
             {
@@ -70,15 +70,15 @@ namespace monitor_splitter
 
                     for (int i = 0; i < configLines.Length; i++)
                     {
-                        if (configLines[i].StartsWith("menu_scale_factor"))
+                        if (configLines[i].StartsWith(confTarget))
                         {
-                            // Store the original scale factor value
-                            if (launching) OriginalScaleFactor = double.Parse(configLines[i].Split('=')[1].Trim().Trim('"'));
+                            // Store the original config value
+                            if (launching) OriginalConfValues[confPos] = configLines[i].Split('=')[1].Trim().Trim('"');
 
-                            configLines[i] = $"menu_scale_factor = \"{updatedScaleFactor}\"";
+                            configLines[i] = $"{confTarget} = {newValue}";
                             // Save the modified configuration back to the file
                             File.WriteAllLines(ConfigPath, configLines);
-                            Console.WriteLine("Scale factor set successfully.");
+                            Console.WriteLine($"\"{confTarget}\" set successfully.");
                             break;
                         }
                     }
@@ -93,81 +93,7 @@ namespace monitor_splitter
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        private void setJoypadIndex(int currPlayerNum)
-        {
-            try
-            {
-                if (File.Exists(ConfigPath))
-                {
-                    string[] configLines = File.ReadAllLines(ConfigPath);
-
-                    for (int i = 0; i < configLines.Length; i++)
-                    {
-                        // Only checking for player1, since configs are set to only allow 1 player per instance
-                        if (configLines[i].StartsWith("input_player1_joypad_index"))
-                        {
-                            configLines[i] = $"input_player1_joypad_index = \"{currPlayerNum}\"";
-                            
-                            // Save the modified configuration back to the file
-                            File.WriteAllLines(ConfigPath, configLines);
-                            Console.WriteLine($"Joypad Index for player \"{ currPlayerNum }\" set successfully.");
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("retroarch.cfg file not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        private void limitMaxPlayers(bool launching)
-        {
-            try
-            {
-                if (File.Exists(ConfigPath))
-                {
-                    string[] configLines = File.ReadAllLines(ConfigPath);
-
-                    for (int i = 0; i < configLines.Length; i++)
-                    {
-                        if (configLines[i].StartsWith("input_max_users"))
-                        {
-                            // Store the original max users value
-                            if (launching)
-                            {
-                                OriginalMaxUsers = int.Parse(configLines[i].Split('=')[1].Trim().Trim('"'));
-                                configLines[i] = $"input_max_users = 1";
-                            }
-                            else
-                            {
-                                configLines[i] = $"input_max_users = \"{OriginalMaxUsers}\"";
-                            }
-                            
-                            // Save the modified configuration back to the file
-                            File.WriteAllLines(ConfigPath, configLines);
-                            Console.WriteLine("Max Users set successfully.");
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("retroarch.cfg file not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
+        
         private void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             try
@@ -175,7 +101,8 @@ namespace monitor_splitter
                 retroarchProcesses = new Process[NumberOfPlayers];
                 for (int i = 0; i < NumberOfPlayers; i++)
                 {
-                    setJoypadIndex(i);
+                    manipulateConfig(true, 2, "input_player1_joypad_index", i.ToString());
+                    if (i > 0) manipulateConfig(true, 3, "audio_mute_enable", "true");
                     retroarchProcesses[i] = Process.Start(ExePath);
                     // Sleeping for 0.5s so that the config file can save
                     Thread.Sleep(500);
@@ -208,9 +135,10 @@ namespace monitor_splitter
                             closedWindows++;
                             if (closedWindows == 5)
                             {
-                                SetScaleFactor(OriginalScaleFactor, false);
-                                limitMaxPlayers(false);
-                                setJoypadIndex(0);
+                                manipulateConfig(false, 0, "menu_scale_factor", OriginalConfValues[0]);
+                                manipulateConfig(false, 1, "input_max_users", OriginalConfValues[1]);
+                                manipulateConfig(false, 2, "input_player1_joypad_index", OriginalConfValues[2]);
+                                manipulateConfig(false, 3, "audio_mute_enable", OriginalConfValues[3]);
                                 Dispatcher.Invoke(() => Environment.Exit(0));
                             }
                         }
